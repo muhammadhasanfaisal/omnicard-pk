@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omni Card (omnicard.pk) — One Tap, Endless Connections</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#05070E',
+                        midnight: '#0A0E1A',
+                        cyanNeon: '#00D2FF',
+                        purpleNeon: '#9D4EDD',
+                        magentaNeon: '#B5179E',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'ripple': 'ripple 2.5s cubic-bezier(0, 0.2, 0.8, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        ripple: {
+                            '0%': { transform: 'scale(0.85)', opacity: '0.8' },
+                            '100%': { transform: 'scale(1.45)', opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #05070E;
+            color: #F8FAFC;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05070E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00D2FF, #9D4EDD);
+            border-radius: 9999px;
+        }
+
+        /* Gradient Typography */
+        .text-omni-gradient {
+            background: linear-gradient(90deg, #00D2FF 0%, #7B61FF 55%, #B5179E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Glowing Neon Borders */
+        .omni-border-glow {
+            position: relative;
+            background: linear-gradient(145deg, rgba(13, 19, 36, 0.88), rgba(7, 10, 20, 0.95));
+            border: 1px solid rgba(0, 210, 255, 0.25);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.08), inset 0 0 20px rgba(157, 78, 221, 0.06);
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .omni-border-glow:hover {
+            border-color: rgba(0, 210, 255, 0.6);
+            box-shadow: 0 0 35px rgba(0, 210, 255, 0.22), 0 0 50px rgba(157, 78, 221, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .omni-gradient-btn {
+            background: linear-gradient(90deg, #00D2FF 0%, #7B61FF 50%, #B5179E 100%);
+            background-size: 200% auto;
+            transition: all 0.4s ease;
+        }
+
+        .omni-gradient-btn:hover {
+            background-position: right center;
+            box-shadow: 0 0 28px rgba(0, 210, 255, 0.45), 0 0 40px rgba(181, 23, 158, 0.35);
+            transform: translateY(-1px);
+        }
+
+        /* 3D Perspective Card Container */
+        .card-perspective {
+            perspective: 1200px;
+        }
+
+        .nfc-card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            box-shadow: 
+                -12px 12px 45px rgba(0, 210, 255, 0.22),
+                12px -12px 45px rgba(181, 23, 158, 0.22),
+                0 25px 50px -12px rgba(0, 0, 0, 0.85);
+        }
+
+        /* Ambient Background Arcs matching brand posters */
+        .ambient-arc-top {
+            background: radial-gradient(ellipse at 50% -10%, rgba(0, 210, 255, 0.18) 0%, rgba(157, 78, 221, 0.1) 35%, transparent 70%);
+        }
+
+        .ambient-arc-bottom {
+            background: radial-gradient(ellipse at 50% 110%, rgba(181, 23, 158, 0.18) 0%, rgba(0, 210, 255, 0.08) 40%, transparent 70%);
+        }
+
+        /* Avatar Ring */
+        .avatar-neon-ring {
+            background: linear-gradient(135deg, #00D2FF, #9D4EDD, #B5179E);
+            padding: 2.5px;
+            box-shadow: 0 0 18px rgba(0, 210, 255, 0.35);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyanNeon/30 selection:text-white">
+
+    <!-- Ambient Radial Glows -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyanNeon/10 rounded-full blur-[130px]"></div>
+        <div class="absolute top-1/3 -right-40 w-[28rem] h-[28rem] bg-purpleNeon/10 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-40 left-1/4 w-[30rem] h-[30rem] bg-magentaNeon/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-obsidian/80 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#home" class="flex items-center gap-3 group focus:outline-none">
+                <svg class="w-11 h-11 sm:w-12 sm:h-12 shrink-0 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Omni Card Logo">
+                    <defs>
+                        <linearGradient id="omniLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00D2FF"/>
+                            <stop offset="50%" stop-color="#7B61FF"/>
+                            <stop offset="100%" stop-color="#B5179E"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- OuterNFC Waves -->
+                    <path d="M72 14C91.882 14 108 30.118 108 50C108 69.882 91.882 86 72 86" stroke="url(#omniLogoGrad)" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M70 24C84.359 24 96 35.641 96 50C96 64.359 84.359 76 70 76" stroke="url(#omniLogoGrad)" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M68 34C76.837 34 84 41.163 84 50C84 58.837 76.837 66 68 66" stroke="url(#omniLogoGrad)" stroke-width="5" stroke-linecap="round"/>
+                    <!-- Card Outline + Play/Tap Angle -->
+                    <path d="M18 32H48L62 50L48 68H18C14.686 68 12 65.314 12 62V38C12 34.686 14.686 32 18 32Z" stroke="url(#omniLogoGrad)" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M26 32L38 18L50 32" stroke="url(#omniLogoGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M26 68L38 82L50 68" stroke="url(#omniLogoGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- EMV Chip -->
+                    <rect x="20" y="43" width="12" height="14" rx="2.5" stroke="#00D2FF" stroke-width="2.5"/>
+                    <line x1="20" y1="48" x2="32" y2="48" stroke="#00D2FF" stroke-width="2"/>
+                    <line x1="20" y1="52" x2="32" y2="52" stroke="#00D2FF" stroke-width="2"/>
+                    <line x1="26" y1="43" x2="26" y2="57" stroke="#00D2FF" stroke-width="2"/>
+                    <!-- Infinity Loop -->
+                    <path d="M47 50C47 44.5 51.5 41 56 41C60.5 41 64 45 67 50C70 55 73.5 59 78 59C82.5 59 87 55.5 87 50C87 44.5 82.5 41 78 41C73.5 41 70 45 67 50C64 55 60.5 59 56 59C51.5 59 47 55.5 47 50Z" stroke="url(#omniLogoGrad)" stroke-width="4.5" stroke-linecap="round"/>
+                </svg>
+                <div class="flex flex-col">
+                    <div class="text-xl sm:text-2xl font-extrabold tracking-tight leading-none">
+                        <span class="text-cyanNeon">omni</span> <span class="text-white">card</span>
+                    </div>
+                    <span class="text-[10px] sm:text-[11px] text-slate-400 tracking-wider font-medium mt-0.5">one tap, endless connections</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+                <a href="#home" class="hover:text-cyanNeon transition-colors">Home</a>
+                <a href="#how-it-works" class="hover:text-cyanNeon transition-colors">How It Works</a>
+                <a href="#phase-1" class="hover:text-cyanNeon transition-colors">Phase 1 Drop</a>
+                <a href="#team" class="hover:text-cyanNeon transition-colors">Our Team</a>
+                <a href="#early-access" class="px-4 py-2 rounded-full omni-gradient-btn text-white font-semibold shadow-lg">Reserve Card</a>
+                <button onclick="openTeamPortal()" title="Team Admin Portal" class="p-2 rounded-full border border-white/10 bg-white/5 hover:border-cyanNeon/50 hover:text-cyanNeon text-slate-400 transition-all" aria-label="Team Portal">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </button>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center gap-2 md:hidden">
+                <a href="#early-access" class="px-3.5 py-1.5 rounded-full omni-gradient-btn text-xs font-bold text-white">Reserve</a>
+                <button id="mobile-menu-btn" class="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:text-cyanNeon focus:outline-none" aria-label="Toggle Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-midnight/95 backdrop-blur-2xl border-b border-white/10 px-4 pt-3 pb-5 space-y-2">
+            <a href="#home" class="mobile-nav-link block px-4 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-cyanNeon">Home</a>
+            <a href="#how-it-works" class="mobile-nav-link block px-4 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-cyanNeon">How It Works</a>
+            <a href="#phase-1" class="mobile-nav-link block px-4 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-cyanNeon">Phase 1 Drop & Editions</a>
+            <a href="#team" class="mobile-nav-link block px-4 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-cyanNeon">Meet The Team</a>
+            <a href="#early-access" class="mobile-nav-link block px-4 py-2.5 rounded-xl text-sm font-semibold text-cyanNeon bg-cyanNeon/10 border border-cyanNeon/30">Reserve Phase 1 Card</a>
+            <button onclick="openTeamPortal()" class="w-full text-left flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5">
+                <svg class="w-4 h-4 text-purpleNeon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Team Portal (Admin Only)
+            </button>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION -->
+    <section id="home" class="relative z-10 ambient-arc-top pt-10 pb-20 sm:pt-16 sm:pb-28 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            <!-- Left Content Column -->
+            <div class="lg:col-span-6 text-center lg:text-left space-y-6">
+                <!-- Coming Soon Glowing Badge -->
+                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-midnight/90 border border-cyanNeon/40 shadow-[0_0_20px_rgba(0,210,255,0.2)]">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyanNeon opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyanNeon"></span>
+                    </span>
+                    <span class="text-xs sm:text-sm font-semibold tracking-wide text-slate-100">
+                        Coming Soon — Official Platform Launching Soon
+                    </span>
+                </div>
+
+                <!-- Main Bold Headline -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1]">
+                    <span class="block text-white">Tap to <span class="text-omni-gradient">Connect.</span></span>
+                    <span class="block text-white text-2xl sm:text-3xl lg:text-4xl mt-2 font-extrabold">One card. <span class="text-omni-gradient">Everything about you.</span></span>
+                </h1>
+
+                <p class="text-lg sm:text-xl font-semibold text-slate-200">
+                    Share your digital identity with a single tap.
+                </p>
+
+                <p class="text-sm sm:text-base text-slate-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                    Your next connection is <span class="text-cyanNeon font-semibold">just a tap away</span>. No app required—simply hold your Omni Card near any NFC-enabled iPhone or Android smartphone to launch your live digital profile instantly.
+                </p>
+
+                <!-- CTA Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#early-access" class="w-full sm:w-auto px-8 py-4 rounded-2xl omni-gradient-btn text-white font-bold text-base shadow-xl text-center">
+                        Reserve Phase 1 Card
+                    </a>
+                    <button onclick="openTapSimulation()" class="w-full sm:w-auto px-7 py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-cyanNeon/40 text-white font-semibold text-base flex items-center justify-center gap-2.5 transition-all group">
+                        <svg class="w-5 h-5 text-cyanNeon group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        Simulate Live Tap
+                    </button>
+                </div>
+
+                <!-- Micro Trust Highlights -->
+                <div class="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs sm:text-sm text-slate-400">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-cyanNeon"></span>
+                        <span>Zero App Required</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-purpleNeon"></span>
+                        <span>iOS & Android Ready</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-magentaNeon"></span>
+                        <span>Limited Batch of 20</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Interactive 3D Minimalist NFC Card Mockup -->
+            <div class="lg:col-span-6 flex flex-col items-center justify-center">
+                <div class="card-perspective w-full max-w-[440px] mx-auto animate-float">
+                    <div id="nfc-card-mockup" onclick="openTapSimulation()" class="nfc-card-3d cursor-pointer relative aspect-[1.586/1] w-full rounded-3xl overflow-hidden bg-[#070B16] border-2 border-cyanNeon/60 select-none group">
+                        
+                        <!-- Matte Texture & Radial Glow -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#0B132B] via-[#060913] to-[#120824] opacity-95"></div>
+                        
+                        <!-- Circuit Board SVG Pattern matching the uploaded Omni Card poster -->
+                        <svg class="absolute inset-0 w-full h-full opacity-80" viewBox="0 0 440 278" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00D2FF"/>
+                                    <stop offset="55%" stop-color="#7B61FF"/>
+                                    <stop offset="100%" stop-color="#B5179E"/>
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Left & Right Hexagons -->
+                            <polygon points="28,55 52,41 76,55 76,83 52,97 28,83" stroke="url(#circuitGrad)" stroke-width="1.8" fill="rgba(0,210,255,0.03)"/>
+                            <polygon points="28,195 52,181 76,195 76,223 52,237 28,223" stroke="url(#circuitGrad)" stroke-width="1.8" fill="rgba(0,210,255,0.03)"/>
+                            <polygon points="364,55 388,41 412,55 412,83 388,97 364,83" stroke="url(#circuitGrad)" stroke-width="1.8" fill="rgba(181,23,158,0.04)"/>
+                            <polygon points="364,195 388,181 412,195 412,223 388,237 364,223" stroke="url(#circuitGrad)" stroke-width="1.8" fill="rgba(181,23,158,0.04)"/>
+
+                            <!-- Circuit Trace Lines Top -->
+                            <path d="M85 20 H150 L170 40 H205" stroke="url(#circuitGrad)" stroke-width="1.6"/>
+                            <circle cx="205" cy="40" r="3" fill="#00D2FF"/>
+                            <path d="M355 20 H290 L270 40 H235" stroke="url(#circuitGrad)" stroke-width="1.6"/>
+                            <circle cx="235" cy="40" r="3" fill="#B5179E"/>
+                            <path d="M185 10 V32 L198 45" stroke="url(#circuitGrad)" stroke-width="1.4"/>
+                            <path d="M255 10 V32 L242 45" stroke="url(#circuitGrad)" stroke-width="1.4"/>
+
+                            <!-- Circuit Trace Lines Bottom -->
+                            <path d="M85 258 H150 L170 238 H205" stroke="url(#circuitGrad)" stroke-width="1.6"/>
+                            <circle cx="205" cy="238" r="3" fill="#00D2FF"/>
+                            <path d="M355 258 H290 L270 238 H235" stroke="url(#circuitGrad)" stroke-width="1.6"/>
+                            <circle cx="235" cy="238" r="3" fill="#B5179E"/>
+                            <path d="M185 268 V246 L198 233" stroke="url(#circuitGrad)" stroke-width="1.4"/>
+                            <path d="M255 268 V246 L242 233" stroke="url(#circuitGrad)" stroke-width="1.4"/>
+
+                            <!-- Left & Right Edge Circuit Traces -->
+                            <path d="M10 115 H48 L62 129" stroke="#00D2FF" stroke-width="1.6"/>
+                            <circle cx="62" cy="129" r="3" fill="#00D2FF"/>
+                            <path d="M10 163 H48 L62 149" stroke="#00D2FF" stroke-width="1.6"/>
+                            <circle cx="62" cy="149" r="3" fill="#00D2FF"/>
+
+                            <path d="M430 115 H392 L378 129" stroke="#B5179E" stroke-width="1.6"/>
+                            <circle cx="378" cy="129" r="3" fill="#B5179E"/>
+                            <path d="M430 163 H392 L378 149" stroke="#B5179E" stroke-width="1.6"/>
+                            <circle cx="378" cy="149" r="3" fill="#B5179E"/>
+
+                            <!-- Left Concentric NFC Waves -->
+                            <path d="M132 76 C98 110 98 168 132 202" stroke="#00D2FF" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+                            <path d="M148 92 C122 118 122 160 148 186" stroke="#00D2FF" stroke-width="5.5" stroke-linecap="round" opacity="0.85"/>
+                            <path d="M164 108 C146 125 146 153 164 170" stroke="#00D2FF" stroke-width="5" stroke-linecap="round"/>
+
+                            <!-- Right Concentric NFC Waves -->
+                            <path d="M308 76 C342 110 342 168 308 202" stroke="#9D4EDD" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+                            <path d="M292 92 C318 118 318 160 292 186" stroke="#9D4EDD" stroke-width="5.5" stroke-linecap="round" opacity="0.85"/>
+                            <path d="M276 108 C294 125 294 153 276 170" stroke="#9D4EDD" stroke-width="5" stroke-linecap="round"/>
+
+                            <!-- Center Glowing Ring -->
+                            <circle cx="220" cy="139" r="52" stroke="url(#circuitGrad)" stroke-width="2" fill="rgba(5,7,14,0.85)"/>
+                            <circle cx="220" cy="139" r="45" stroke="rgba(0,210,255,0.25)" stroke-width="1"/>
+                        </svg>
+
+                        <!-- Centered Card Typography -->
+                        <div class="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
+                            <span class="text-white font-black tracking-wider text-lg sm:text-2xl drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+                                TAP TO CONNECT
+                            </span>
+                            <span class="text-cyanNeon/90 font-medium text-xs sm:text-sm tracking-widest mt-1">
+                                omnicard.pk
+                            </span>
+                        </div>
+
+                        <!-- Interactive Tap Hint Pill -->
+                        <div class="absolute bottom-3 right-3.5 z-10 px-2.5 py-1 rounded-full bg-black/70 border border-white/15 backdrop-blur-md text-[10px] font-semibold text-cyanNeon flex items-center gap-1.5 group-hover:border-cyanNeon transition-colors">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyanNeon animate-ping"></span>
+                            Click to Tap
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 mt-4 text-center">
+                    Move cursor over card for 3D tilt or tap card to preview live phone profile
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. HOW IT WORKS (3-Step Section) -->
+    <section id="how-it-works" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-cyanNeon">Seamless Technology</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">
+                    Your introduction, <span class="text-omni-gradient">upgraded.</span>
+                </h2>
+                <p class="text-slate-400 text-sm sm:text-base mt-3">
+                    Three effortless steps to replace outdated paper business cards forever.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Step 01 -->
+                <div class="omni-border-glow rounded-3xl p-7 sm:p-8 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full avatar-neon-ring flex items-center justify-center mb-6">
+                        <div class="w-full h-full rounded-full bg-midnight flex items-center justify-center">
+                            <svg class="w-7 h-7 text-cyanNeon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-cyanNeon mb-1">Step 01</span>
+                    <h3 class="text-xl font-bold text-white mb-3">Tap Card</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Hold your Omni Card near the back of any compatible iPhone or Android smartphone. No manual searching, typing, or QR fumbling.
+                    </p>
+                </div>
+
+                <!-- Step 02 -->
+                <div class="omni-border-glow rounded-3xl p-7 sm:p-8 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full avatar-neon-ring flex items-center justify-center mb-6">
+                        <div class="w-full h-full rounded-full bg-midnight flex items-center justify-center">
+                            <svg class="w-7 h-7 text-purpleNeon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-purpleNeon mb-1">Step 02</span>
+                    <h3 class="text-xl font-bold text-white mb-3">Instant Digital Profile Opens</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Zero app required. Your custom digital identity, social links, WhatsApp, portfolio, and contact card launch immediately in their browser.
+                    </p>
+                </div>
+
+                <!-- Step 03 -->
+                <div class="omni-border-glow rounded-3xl p-7 sm:p-8 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full avatar-neon-ring flex items-center justify-center mb-6">
+                        <div class="w-full h-full rounded-full bg-midnight flex items-center justify-center">
+                            <svg class="w-7 h-7 text-magentaNeon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-magentaNeon mb-1">Step 03</span>
+                    <h3 class="text-xl font-bold text-white mb-3">Connect & Share Effortlessly</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Let new contacts save your details in one click and follow your channels—making every introduction count wherever you go.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4 Core Brand Value Pillars -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+                <div class="rounded-2xl bg-midnight/70 border border-cyanNeon/25 p-5 flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-full avatar-neon-ring shrink-0">
+                        <div class="w-full h-full rounded-full bg-obsidian flex items-center justify-center text-cyanNeon font-black text-xs">⚡</div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">01. One Tap. Instant Connection.</h4>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Share your digital profile with a simple tap. No manual searching or typing.</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-midnight/70 border border-purpleNeon/25 p-5 flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-full avatar-neon-ring shrink-0">
+                        <div class="w-full h-full rounded-full bg-obsidian flex items-center justify-center text-purpleNeon font-black text-xs">📱</div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">02. No App Required.</h4>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Your profile opens directly on any compatible NFC smartphone.</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-midnight/70 border border-cyanNeon/25 p-5 flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-full avatar-neon-ring shrink-0">
+                        <div class="w-full h-full rounded-full bg-obsidian flex items-center justify-center text-cyanNeon font-black text-xs">✓</div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">03. Your Identity, Digitally.</h4>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Bring your contact information and professional presence together in one profile.</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-midnight/70 border border-magentaNeon/25 p-5 flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-full avatar-neon-ring shrink-0">
+                        <div class="w-full h-full rounded-full bg-obsidian flex items-center justify-center text-magentaNeon font-black text-xs">✦</div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white">04. Make Every Introduction Count.</h4>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Make networking easier wherever you meet someone new.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. PHASE 1 LIMITED DROP & DYNAMIC CARD EDITIONS / SERVICES -->
+    <section id="phase-1" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-midnight/30">
+        <div class="max-w-7xl mx-auto space-y-16">
+            
+            <!-- Phase 1 vs Phase 2 Roadmap Cards -->
+            <div>
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-purpleNeon">Exclusive Genesis Batch</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">
+                        Phase 1 <span class="text-omni-gradient">Limited Drop</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm sm:text-base mt-3">
+                        Be among the first 20 pioneers in Pakistan to carry the Genesis Edition Omni Card.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Phase 1 Card -->
+                    <div class="omni-border-glow rounded-3xl p-7 sm:p-9 relative overflow-hidden">
+                        <div class="flex items-center justify-between gap-4 mb-5">
+                            <span class="px-3.5 py-1 rounded-full text-xs font-bold bg-cyanNeon/15 text-cyanNeon border border-cyanNeon/40">
+                                PHASE 01 • ACTIVE RESERVATIONS
+                            </span>
+                            <span class="text-xs font-bold text-slate-300 bg-white/5 px-3 py-1 rounded-full">
+                                Genesis Batch
+                            </span>
+                        </div>
+
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">
+                            Only 20 Founding Physical NFC Cards
+                        </h3>
+                        <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+                            Our inaugural hand-calibrated matte obsidian smart cards with custom engraved circuit aesthetics, pre-programmed with your personal instant-tap digital profile link.
+                        </p>
+
+                        <!-- Dynamic Live Remaining Spots Progress -->
+                        <div class="bg-obsidian/80 border border-white/10 rounded-2xl p-4 mb-6">
+                            <div class="flex items-center justify-between text-xs sm:text-sm font-semibold mb-2">
+                                <span class="text-slate-300">Batch 01 Allocation</span>
+                                <span id="spots-counter-text" class="text-cyanNeon font-bold">20 of 20 Founding Cards Available</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-white/10 rounded-full overflow-hidden">
+                                <div id="spots-progress-bar" class="h-full omni-gradient-btn rounded-full transition-all duration-500" style="width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <a href="#early-access" class="inline-flex items-center gap-2 text-sm font-bold text-cyanNeon hover:text-white transition-colors">
+                            Claim 1 of the 20 Founding Spots
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Phase 2 Card -->
+                    <div class="omni-border-glow rounded-3xl p-7 sm:p-9 relative overflow-hidden">
+                        <div class="flex items-center justify-between gap-4 mb-5">
+                            <span class="px-3.5 py-1 rounded-full text-xs font-bold bg-purpleNeon/15 text-purpleNeon border border-purpleNeon/40">
+                                PHASE 02 • UPCOMING PLATFORM
+                            </span>
+                            <span class="text-xs font-semibold text-slate-400">
+                                Full Ecosystem
+                            </span>
+                        </div>
+
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">
+                            Custom Dashboards & Full Web Integration
+                        </h3>
+                        <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+                            Phase 1 holders automatically unlock priority migration to the full <span class="text-white font-semibold">omnicard.pk</span> cloud ecosystem—complete with real-time profile editing, tap analytics, lead capture, and corporate team management.
+                        </p>
+
+                        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-300">
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-5 h-5 rounded-full bg-purpleNeon/20 text-purpleNeon flex items-center justify-center text-xs font-bold">✓</span>
+                                Self-serve custom user dashboards & live link toggling
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-5 h-5 rounded-full bg-cyanNeon/20 text-cyanNeon flex items-center justify-center text-xs font-bold">✓</span>
+                                Tap analytics, contact exchange & vCard auto-download
+                            </li>
+                            <li class="flex items-center gap-2.5">
+                                <span class="w-5 h-5 rounded-full bg-magentaNeon/20 text-magentaNeon flex items-center justify-center text-xs font-bold">✓</span>
+                                Custom corporate & event team card bundles
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Card Editions & Services Showcase (Managed via Team Portal) -->
+            <div class="pt-4">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-[0.2em] text-cyanNeon">Catalog & Offerings</span>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+                            Card Editions & <span class="text-omni-gradient">Services</span>
+                        </h3>
+                    </div>
+                    <button onclick="openTeamPortal()" class="self-start sm:self-auto text-xs font-medium text-slate-400 hover:text-cyanNeon flex items-center gap-1.5 border border-white/10 rounded-full px-3.5 py-1.5 bg-white/5 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        Team Catalog Upload
+                    </button>
+                </div>
+
+                <!-- Container dynamically populated: Shows themed Coming Soon banner if empty, or live cards/services added by team -->
+                <div id="catalog-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. MEET THE TEAM SECTION -->
+    <section id="team" class="relative z-10 py-20 px-4 sm:px-6 lg:px-8 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-purpleNeon/30 text-xs font-bold tracking-widest text-cyanNeon uppercase mb-3">
+                    OMNI CARD • FSM BATTLE OF THE BRANDS 2026
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white">
+                    MEET THE <span class="text-omni-gradient">TEAM</span>
+                </h2>
+                <p class="text-slate-400 text-sm sm:text-base mt-3">
+                    The 11 builders, strategists, and innovators engineering the future of smart networking at <span class="text-white font-semibold">omnicard.pk</span>.
+                </p>
+            </div>
+
+            <!-- 11 Founding Team Members Responsive Grid -->
+            <div id="team-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <!-- Populated cleanly via JS with editable names/roles from Team Portal -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. EARLY ACCESS / RESERVE A CARD FORM & INSTAGRAM -->
+    <section id="early-access" class="relative z-10 ambient-arc-bottom py-20 px-4 sm:px-6 lg:px-8 border-t border-white/5">
+        <div class="max-w-4xl mx-auto">
+            <div class="omni-border-glow rounded-3xl p-6 sm:p-10 lg:p-12">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <span class="px-3.5 py-1 rounded-full text-xs font-bold bg-cyanNeon/15 text-cyanNeon border border-cyanNeon/30">
+                        PRIORITY ACCESS LIST
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3">
+                        Reserve Your <span class="text-omni-gradient">Omni Card</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm sm:text-base mt-2">
+                        Lock in your spot for the Phase 1 Limited Drop of 20 cards. We will reach out directly via WhatsApp, Email, or Instagram DM.
+                    </p>
+                </div>
+
+                <!-- Reservation Form -->
+                <form id="reservation-form" class="space-y-5 max-w-xl mx-auto">
+                    <div>
+                        <label for="res-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                            Full Name <span class="text-cyanNeon">*</span>
+                        </label>
+                        <input type="text" id="res-name" required placeholder="e.g., Ali Raza"
+                            class="w-full px-4 py-3.5 rounded-2xl bg-obsidian/90 border border-white/15 text-white placeholder-slate-500 focus:outline-none focus:border-cyanNeon focus:ring-1 focus:ring-cyanNeon transition-all text-sm sm:text-base">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label for="res-contact" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                                Email or Phone / WhatsApp <span class="text-cyanNeon">*</span>
+                            </label>
+                            <input type="text" id="res-contact" required placeholder="e.g., +92 300 1234567 or you@email.com"
+                                class="w-full px-4 py-3.5 rounded-2xl bg-obsidian/90 border border-white/15 text-white placeholder-slate-500 focus:outline-none focus:border-cyanNeon focus:ring-1 focus:ring-cyanNeon transition-all text-sm sm:text-base">
+                        </div>
+
+                        <div>
+                            <label for="res-instagram" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                                Instagram Handle <span class="text-cyanNeon">*</span>
+                            </label>
+                            <input type="text" id="res-instagram" required placeholder="e.g., @yourhandle"
+                                class="w-full px-4 py-3.5 rounded-2xl bg-obsidian/90 border border-white/15 text-white placeholder-slate-500 focus:outline-none focus:border-purpleNeon focus:ring-1 focus:ring-purpleNeon transition-all text-sm sm:text-base">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-2xl omni-gradient-btn text-white font-bold text-base shadow-xl tracking-wide">
+                        Reserve Early Access Spot
+                    </button>
+                </form>
+
+                <!-- Reservation Success Pass (Hidden until submitted) -->
+                <div id="reservation-success" class="hidden max-w-xl mx-auto mt-6 p-6 rounded-2xl bg-obsidian/95 border border-cyanNeon/50 text-center space-y-3 shadow-[0_0_30px_rgba(0,210,255,0.2)]">
+                    <div class="w-12 h-12 rounded-full bg-cyanNeon/20 text-cyanNeon flex items-center justify-center mx-auto">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">You're on the Phase 1 Priority List!</h3>
+                    <p id="success-message-detail" class="text-sm text-slate-300"></p>
+                    <div class="inline-block px-4 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-cyanNeon">
+                        Pass ID: <span id="reservation-pass-code" class="font-bold">OMNI-001</span>
+                    </div>
+                    <div class="pt-2">
+                        <button type="button" onclick="resetReservationForm()" class="text-xs text-slate-400 hover:text-white underline">
+                            Register another reservation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Official Instagram CTA -->
+                <div class="mt-10 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-sm font-semibold text-white">Comment <span class="text-cyanNeon">"TAP"</span> on our latest drop post</p>
+                        <p class="text-xs text-slate-400">Follow live updates, behind-the-scenes & Phase 1 announcements.</p>
+                    </div>
+                    <a href="https://instagram.com/omnicard.pk" target="_blank" rel="noopener noreferrer"
+                        class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-purpleNeon/50 hover:border-cyanNeon text-white font-semibold text-sm flex items-center justify-center gap-2.5 transition-all">
+                        <svg class="w-5 h-5 text-magentaNeon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        Follow @omnicard.pk on Instagram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-white/10 bg-obsidian py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div>
+                <div class="text-lg font-extrabold tracking-tight">
+                    <span class="text-cyanNeon">omni</span> <span class="text-white">card</span>
+                    <span class="text-slate-500 font-normal text-sm ml-2">omnicard.pk</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">one tap, endless connections • FSM Battle of the Brands 2026</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="https://instagram.com/omnicard.pk" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-400 hover:text-cyanNeon transition-colors">
+                    Instagram
+                </a>
+                <span class="text-slate-700">•</span>
+                <button onclick="openTeamPortal()" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyanNeon transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Team Access
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LIVE TAP SIMULATION MODAL (Smartphone Digital Profile Preview) -->
+    <div id="tap-sim-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-lg">
+        <div class="relative w-full max-w-sm rounded-[2.5rem] bg-[#070B16] border-2 border-cyanNeon/60 p-6 shadow-[0_0_60px_rgba(0,210,255,0.3)] animate-fadeIn">
+            <!-- Phone Notch -->
+            <div class="w-24 h-5 bg-black rounded-full mx-auto mb-5 border border-white/10 flex items-center justify-center">
+                <span class="w-2 h-2 rounded-full bg-cyanNeon animate-pulse"></span>
+            </div>
+
+            <!-- Close Button -->
+            <button onclick="closeTapSimulation()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center text-sm font-bold" aria-label="Close Preview">
+                ✕
+            </button>
+
+            <!-- Instant Tap Banner -->
+            <div class="text-center mb-5">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyanNeon/15 border border-cyanNeon/40 text-[11px] font-bold text-cyanNeon">
+                    ⚡ NFC Tag Read • 0.2s Instant Launch
+                </span>
+            </div>
+
+            <!-- Simulated Digital Profile Card -->
+            <div class="rounded-3xl bg-gradient-to-b from-midnight to-obsidian border border-white/10 p-5 text-center space-y-4">
+                <div class="w-20 h-20 rounded-full avatar-neon-ring mx-auto overflow-hidden">
+                    <div id="sim-profile-avatar" class="w-full h-full rounded-full bg-midnight flex items-center justify-center text-xl font-black text-white overflow-hidden">
+                        OC
+                    </div>
+                </div>
+
+                <div>
+                    <h4 id="sim-profile-name" class="text-lg font-extrabold text-white">Omni Card Founder</h4>
+                    <p id="sim-profile-role" class="text-xs text-cyanNeon font-medium">Digital Identity • omnicard.pk</p>
+                    <p id="sim-profile-bio" class="text-xs text-slate-400 mt-1.5">Connecting professionals across Pakistan with a single tap.</p>
+                </div>
+
+                <!-- Interactive Action Pills inside Simulated Phone -->
+                <div class="space-y-2.5 pt-2">
+                    <button onclick="showToast('Contact vCard (.vcf) saved to phone!')" class="w-full py-2.5 px-4 rounded-xl omni-gradient-btn text-white font-bold text-xs shadow-md">
+                        + Save Contact to Phone
+                    </button>
+                    <a href="https://instagram.com/omnicard.pk" target="_blank" rel="noopener noreferrer" class="block w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">
+                        Instagram • @omnicard.pk
+                    </a>
+                    <button onclick="showToast('WhatsApp chat initiated!')" class="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors">
+                        WhatsApp Direct Connect
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-center text-slate-500 mt-4">
+                Live preview of what opens when someone taps your Omni Card.
+            </p>
+        </div>
+    </div>
+
+    <!-- TEAM-ONLY RESTRICTED ADMIN PORTAL MODAL -->
+    <div id="team-portal-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/85 backdrop-blur-xl overflow-y-auto">
+        <div class="relative w-full max-w-3xl rounded-3xl bg-midnight border border-cyanNeon/40 p-6 sm:p-8 shadow-2xl my-8">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-cyanNeon/15 border border-cyanNeon/40 flex items-center justify-center text-cyanNeon">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-extrabold text-white">Omni Card Team Portal</h3>
+                        <p class="text-xs text-slate-400">Restricted Access — Manage Card Editions, Services, Team & Reservations</p>
+                    </div>
+                </div>
+                <button onclick="closeTeamPortal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center text-sm font-bold">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Step A: PIN Lock Screen -->
+            <div id="portal-lock-screen" class="py-10 max-w-sm mx-auto text-center space-y-5">
+                <div class="w-14 h-14 rounded-2xl bg-purpleNeon/15 border border-purpleNeon/40 flex items-center justify-center mx-auto text-purpleNeon">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-white">Enter Team Access PIN</h4>
+                    <p class="text-xs text-slate-400 mt-1">Only authorized Omni Card team members can upload card info & services.</p>
+                </div>
+                <form id="portal-pin-form" class="space-y-3">
+                    <input type="password" id="portal-pin-input" maxlength="12" placeholder="Enter Team PIN" required
+                        class="w-full px-4 py-3 rounded-2xl bg-obsidian border border-white/15 text-center text-white tracking-[0.3em] font-bold focus:outline-none focus:border-cyanNeon">
+                    <button type="submit" class="w-full py-3 rounded-2xl omni-gradient-btn text-white font-bold text-sm">
+                        Unlock Team Dashboard
+                    </button>
+                </form>
+                <p id="pin-error-msg" class="hidden text-xs text-rose-400 font-medium">Incorrect PIN. Please try again.</p>
+                <p class="text-[11px] text-slate-500">
+                    Owner Note: Default demo PIN is <span class="text-cyanNeon font-mono font-bold">2026</span> (you can change it once inside).
+                </p>
+            </div>
+
+            <!-- Step B: Unlocked Admin Dashboard -->
+            <div id="portal-dashboard" class="hidden pt-5 space-y-6 max-h-[75vh] overflow-y-auto pr-1">
+                
+                <!-- Dashboard Tabs -->
+                <div class="flex flex-wrap gap-2 border-b border-white/10 pb-3">
+                    <button onclick="switchPortalTab('catalog')" id="tab-btn-catalog" class="portal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-cyanNeon/20 text-cyanNeon border border-cyanNeon/40">
+                        1. Cards & Services
+                    </button>
+                    <button onclick="switchPortalTab('team')" id="tab-btn-team" class="portal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10">
+                        2. Edit Team (11)
+                    </button>
+                    <button onclick="switchPortalTab('reservations')" id="tab-btn-reservations" class="portal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10">
+                        3. Reservations (<span id="res-count-badge">0</span>)
+                    </button>
+                    <button onclick="switchPortalTab('security')" id="tab-btn-security" class="portal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10">
+                        4. PIN Settings
+                    </button>
+                </div>
+
+                <!-- TAB 1: Manage Cards & Services -->
+                <div id="portal-tab-catalog" class="space-y-6">
+                    <div class="bg-obsidian/80 border border-white/10 rounded-2xl p-5">
+                        <h4 class="text-sm font-bold text-white mb-1">Add New Card Edition or Service</h4>
+                        <p class="text-xs text-slate-400 mb-4">Adding items here automatically replaces the "Coming Soon" banner on the public page.</p>
+                        
+                        <form id="add-catalog-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Card / Service Title *</label>
+                                <input type="text" id="cat-title" required placeholder="e.g., Omni Matte Black NFC Card"
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-midnight border border-white/15 text-sm text-white focus:border-cyanNeon focus:outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">Price (PKR) *</label>
+                                    <input type="text" id="cat-price" required placeholder="e.g., PKR 2,500"
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-midnight border border-white/15 text-sm text-white focus:border-cyanNeon focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">Badge / Tag</label>
+                                    <input type="text" id="cat-tag" placeholder="e.g., Phase 1"
+                                        class="w-full px-3.5 py-2.5 rounded-xl bg-midnight border border-white/15 text-sm text-white focus:border-cyanNeon focus:outline-none">
+                                </div>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Description & Features *</label>
+                                <textarea id="cat-desc" rows="2" required placeholder="Describe the card finish, NFC chip specs, or digital profile service included..."
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-midnight border border-white/15 text-sm text-white focus:border-cyanNeon focus:outline-none"></textarea>
+                            </div>
+                            <div class="sm:col-span-2 flex justify-end">
+                                <button type="submit" class="px-5 py-2.5 rounded-xl omni-gradient-btn text-white text-xs font-bold">
+                                    + Publish to Website
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Published Cards & Services</h4>
+                        <div id="admin-catalog-list" class="space-y-2.5"></div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Edit Team Members -->
+                <div id="portal-tab-team" class="hidden space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <p class="text-xs text-slate-400">Customize names, roles, or portrait photo URLs for the 11 founding team members.</p>
+                        <div class="flex items-center gap-2">
+                            <button onclick="resetTeamDefaults()" class="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold">
+                                Reset Official Roster
+                            </button>
+                            <button onclick="saveTeamMembers()" class="px-4 py-2 rounded-xl omni-gradient-btn text-white text-xs font-bold">
+                                Save Team Changes
+                            </button>
+                        </div>
+                    </div>
+                    <div id="admin-team-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
+
+                <!-- TAB 3: View Reservations -->
+                <div id="portal-tab-reservations" class="hidden space-y-4">
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs text-slate-400">Early Access & Phase 1 Card reservations submitted by visitors.</p>
+                        <button onclick="exportReservationsCSV()" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-cyanNeon text-xs font-semibold">
+                            Download CSV
+                        </button>
+                    </div>
+                    <div id="admin-reservations-list" class="space-y-2.5"></div>
+                </div>
+
+                <!-- TAB 4: Security / PIN Settings -->
+                <div id="portal-tab-security" class="hidden space-y-4">
+                    <div class="bg-obsidian/80 border border-white/10 rounded-2xl p-5 max-w-md space-y-4">
+                        <h4 class="text-sm font-bold text-white">Update Team Access PIN</h4>
+                        <div class="flex gap-3">
+                            <input type="text" id="new-pin-input" placeholder="New PIN (min 4 chars)"
+                                class="flex-1 px-3.5 py-2 rounded-xl bg-midnight border border-white/15 text-sm text-white focus:border-cyanNeon focus:outline-none">
+                            <button onclick="updateTeamPin()" class="px-4 py-2 rounded-xl omni-gradient-btn text-white text-xs font-bold">
+                                Update PIN
+                            </button>
+                        </div>
+                        <div class="pt-2 border-t border-white/10">
+                            <button onclick="lockPortal()" class="text-xs text-rose-400 hover:underline font-medium">
+                                Lock Team Portal Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Subtle Floating Toast Notification -->
+    <div id="toast-banner" class="fixed bottom-5 right-5 z-50 hidden px-5 py-3 rounded-2xl bg-midnight border border-cyanNeon/60 text-white text-xs sm:text-sm font-semibold shadow-[0_0_25px_rgba(0,210,255,0.35)]">
+        Notification
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. STATE & DEFAULT DATA (Persisted in localStorage)
+        // =========================================================================
+        const STORAGE_KEYS = {
+            CATALOG: 'omnicard_catalog_v1',
+            TEAM: 'omnicard_team_v2',
+            RESERVATIONS: 'omnicard_reservations_v1',
+            PIN: 'omnicard_team_pin_v1'
+        };
+
+        const DEFAULT_TEAM = [
+            { id: 1, name: 'M. Awaiz', role: 'TEAM LEADER', initials: 'MA', photo: 'Screenshot 2026-11-22 at 5.46.31 PM.jpg', objectPos: 'object-top' },
+            { id: 2, name: 'Aneeq', role: 'SOCIAL MEDIA MANAGER', initials: 'AN', photo: 'Screenshot 2026-11-22 at 5.46.38 PM.jpg', objectPos: 'object-top' },
+            { id: 3, name: 'Ali', role: 'CREATOR', initials: 'AL', photo: 'Screenshot 2026-11-22 at 5.46.45 PM.jpg', objectPos: 'object-top' },
+            { id: 4, name: 'M. Anas', role: 'DEVELOPER', initials: 'MA', photo: 'Screenshot 2026-11-22 at 5.46.53 PM.jpg', objectPos: 'object-top' },
+            { id: 5, name: 'M. Hasan', role: 'MANAGER', initials: 'MH', photo: 'Screenshot 2026-11-22 at 5.47.01 PM.jpg', objectPos: 'object-top' },
+            { id: 6, name: 'Azaan', role: 'RESEARCHER', initials: 'AZ', photo: 'Screenshot 2026-11-22 at 5.47.09 PM.jpg', objectPos: 'object-top' },
+            { id: 7, name: 'Shaheer', role: 'PRESENTER', initials: 'SH', photo: 'Screenshot 2026-11-22 at 5.47.16 PM.jpg', objectPos: 'object-top' },
+            { id: 8, name: 'Mateen', role: 'DEVELOPER', initials: 'MT', photo: 'Screenshot 2026-11-22 at 5.47.29 PM.jpg', objectPos: 'object-center' },
+            { id: 9, name: 'Shehreyar', role: 'MARKETING & COMMUNICATION', initials: 'SR', photo: 'Screenshot 2026-11-22 at 5.47.36 PM.jpg', objectPos: 'object-top' },
+            { id: 10, name: 'Saif', role: 'TREASURER & EXPENSE ALLOCATOR', initials: 'SF', photo: 'Screenshot 2026-11-22 at 5.47.43 PM.jpg', objectPos: 'object-center' },
+            { id: 11, name: 'Core Team Member', role: 'OPERATIONS & STRATEGY', initials: 'OC', photo: 'Screenshot 2026-11-22 at 5.15.48 PM.jpg', objectPos: 'object-bottom' }
+        ];
+
+        function loadData(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch (e) {
+                return fallback;
+            }
+        }
+
+        function saveData(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {
+                console.warn('Storage unavailable', e);
+            }
+        }
+
+        let catalogItems = loadData(STORAGE_KEYS.CATALOG, []);
+        let teamMembers = loadData(STORAGE_KEYS.TEAM, DEFAULT_TEAM);
+        let reservations = loadData(STORAGE_KEYS.RESERVATIONS, []);
+        let teamPin = loadData(STORAGE_KEYS.PIN, '2026');
+        let isPortalUnlocked = false;
+
+        // =========================================================================
+        // 2. RENDERING PUBLIC SECTIONS
+        // =========================================================================
+
+        // Render Catalog (Shows sleek themed Coming Soon banner if empty, or live cards/services if uploaded by team)
+        function renderCatalog() {
+            const container = document.getElementById('catalog-container');
+            if (!catalogItems || catalogItems.length === 0) {
+                container.innerHTML = `
+                    <div class="relative rounded-3xl overflow-hidden border-2 border-cyanNeon/40 bg-gradient-to-r from-[#071124] via-[#0D0A22] to-[#1A0826] p-8 sm:p-12 text-center shadow-[0_0_40px_rgba(0,210,255,0.12)]">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/50 border border-cyanNeon/40 text-xs font-bold tracking-widest text-cyanNeon uppercase mb-4">
+                            <span class="w-2 h-2 rounded-full bg-cyanNeon animate-ping"></span>
+                            Coming Soon • Official Lineup
+                        </div>
+                        <h4 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                            Card Editions & Service Tiers <span class="text-omni-gradient">Dropping Soon</span>
+                        </h4>
+                        <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto mt-3 leading-relaxed">
+                            Our team is finalizing official pricing, custom finishes, and enterprise digital identity packages. Reserve your Phase 1 Founding Card below to get first access before public release.
+                        </p>
+                        <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-400">
+                            <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10">Matte Obsidian Edition</span>
+                            <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10">Custom Engraved Branding</span>
+                            <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10">Pro Digital Profile Suite</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render team-uploaded cards & services
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${catalogItems.map(item => `
+                        <div class="omni-border-glow rounded-3xl p-6 sm:p-7 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-4">
+                                    <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-cyanNeon/15 text-cyanNeon border border-cyanNeon/30">
+                                        ${escapeHTML(item.tag || 'Omni Edition')}
+                                    </span>
+                                    <span class="text-base font-extrabold text-white">${escapeHTML(item.price)}</span>
+                                </div>
+                                <h4 class="text-xl font-bold text-white mb-2">${escapeHTML(item.title)}</h4>
+                                <p class="text-sm text-slate-400 leading-relaxed mb-6">${escapeHTML(item.desc)}</p>
+                            </div>
+                            <a href="#early-access" onclick="prefillNote('${escapeHTML(item.title)}')" class="w-full py-3 rounded-xl omni-gradient-btn text-white font-bold text-xs text-center tracking-wide">
+                                Request This Edition
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Render 11 Founding Team Members
+        function renderTeam() {
+            const grid = document.getElementById('team-grid');
+            grid.innerHTML = teamMembers.map((member, idx) => {
+                const initials = getInitials(member.name, idx + 1);
+                const badgeNum = `${String(idx + 1).padStart(2, '0')} / 11`;
+                const posClass = member.objectPos || 'object-top';
+                const photoHtml = member.photo
+                    ? `<img src="${escapeHTML(member.photo)}" alt="${escapeHTML(member.name)}" class="w-full h-full object-cover ${posClass}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <span style="display:none" class="w-full h-full items-center justify-center text-lg sm:text-xl font-black text-omni-gradient tracking-wider">${escapeHTML(initials)}</span>`
+                    : `<span class="w-full h-full flex items-center justify-center text-lg sm:text-xl font-black text-omni-gradient tracking-wider">${escapeHTML(initials)}</span>`;
+
+                return `
+                    <div onclick="openMemberTapPreview(${idx})" role="button" tabindex="0" class="omni-border-glow cursor-pointer rounded-3xl p-5 sm:p-6 flex flex-col items-center text-center group relative">
+                        <div class="w-full flex items-center justify-between text-[10px] font-bold tracking-widest mb-3">
+                            <span class="text-cyanNeon/80 uppercase">OMNI TEAM</span>
+                            <span class="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-300 font-mono">${badgeNum}</span>
+                        </div>
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full avatar-neon-ring mb-4 transition-transform duration-300 group-hover:scale-105">
+                            <div class="w-full h-full rounded-full bg-gradient-to-br from-[#0D162C] to-[#060913] flex items-center justify-center relative overflow-hidden">
+                                ${photoHtml}
+                            </div>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-extrabold text-white leading-snug">
+                            ${escapeHTML(member.name)}
+                        </h3>
+                        <div class="w-12 h-1 rounded-full omni-gradient-btn my-2"></div>
+                        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-cyanNeon">
+                            ${escapeHTML(member.role)}
+                        </p>
+                        <span class="mt-3 text-[10px] text-slate-400 group-hover:text-white transition-colors flex items-center gap-1">
+                            ⚡ Tap to preview NFC profile
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update Phase 1 Spots Remaining Counter based on reservations
+        function updateSpotsCounter() {
+            const totalBatch = 20;
+            const claimed = Math.min(reservations.length, totalBatch);
+            const remaining = Math.max(totalBatch - claimed, 0);
+            const pct = (remaining / totalBatch) * 100;
+
+            const counterText = document.getElementById('spots-counter-text');
+            const progressBar = document.getElementById('spots-progress-bar');
+
+            if (counterText) {
+                counterText.textContent = `${remaining} of ${totalBatch} Founding Cards Available`;
+            }
+            if (progressBar) {
+                progressBar.style.width = `${pct}%`;
+            }
+        }
+
+        // =========================================================================
+        // 3. 3D NFC CARD TILT & TAP SIMULATION MODAL
+        // =========================================================================
+        const nfcCardMockup = document.getElementById('nfc-card-mockup');
+        if (nfcCardMockup) {
+            nfcCardMockup.addEventListener('mousemove', (e) => {
+                const rect = nfcCardMockup.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+                nfcCardMockup.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            nfcCardMockup.addEventListener('mouseleave', () => {
+                nfcCardMockup.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+            });
+        }
+
+        function openTapSimulation(customProfile) {
+            const avatarEl = document.getElementById('sim-profile-avatar');
+            const nameEl = document.getElementById('sim-profile-name');
+            const roleEl = document.getElementById('sim-profile-role');
+            const bioEl = document.getElementById('sim-profile-bio');
+
+            if (customProfile) {
+                const initials = getInitials(customProfile.name, 1);
+                const posClass = customProfile.objectPos || 'object-top';
+                avatarEl.innerHTML = customProfile.photo
+                    ? `<img src="${escapeHTML(customProfile.photo)}" alt="${escapeHTML(customProfile.name)}" class="w-full h-full object-cover ${posClass}" onerror="this.outerHTML='<span>${escapeHTML(initials)}</span>'">`
+                    : `<span>${escapeHTML(initials)}</span>`;
+                nameEl.textContent = customProfile.name;
+                roleEl.textContent = `${customProfile.role} • Omni Card Team`;
+                bioEl.textContent = `Official Omni Card founding member (${customProfile.badge}) • FSM Battle of the Brands 2026.`;
+            } else {
+                avatarEl.innerHTML = 'OC';
+                nameEl.textContent = 'Omni Card Founder';
+                roleEl.textContent = 'Digital Identity • omnicard.pk';
+                bioEl.textContent = 'Connecting professionals across Pakistan with a single tap.';
+            }
+
+            const modal = document.getElementById('tap-sim-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function openMemberTapPreview(index) {
+            const member = teamMembers[index];
+            if (!member) return;
+            openTapSimulation({
+                name: member.name,
+                role: member.role,
+                photo: member.photo,
+                objectPos: member.objectPos,
+                badge: `${String(index + 1).padStart(2, '0')} / 11`
+            });
+        }
+
+        function closeTapSimulation() {
+            const modal = document.getElementById('tap-sim-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // =========================================================================
+        // 4. EARLY ACCESS RESERVATION FORM
+        // =========================================================================
+        document.getElementById('reservation-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('res-name').value.trim();
+            const contact = document.getElementById('res-contact').value.trim();
+            let instagram = document.getElementById('res-instagram').value.trim();
+
+            if (!name || !contact || !instagram) return;
+            if (!instagram.startsWith('@')) instagram = '@' + instagram;
+
+            const passCode = 'OMNI-' + String(reservations.length + 1).padStart(3, '0');
+            const entry = {
+                id: Date.now(),
+                passCode,
+                name,
+                contact,
+                instagram,
+                timestamp: new Date().toLocaleString()
+            };
+
+            reservations.unshift(entry);
+            saveData(STORAGE_KEYS.RESERVATIONS, reservations);
+            updateSpotsCounter();
+
+            // Show Success UI
+            document.getElementById('reservation-form').classList.add('hidden');
+            const successBox = document.getElementById('reservation-success');
+            successBox.classList.remove('hidden');
+            document.getElementById('reservation-pass-code').textContent = passCode;
+            document.getElementById('success-message-detail').textContent =
+                `Thank you, ${name}! Your reservation (${instagram}) has been logged. Our team will message you on ${contact} shortly.`;
+
+            showToast('Phase 1 Card Reservation Confirmed!');
+        });
+
+        function resetReservationForm() {
+            document.getElementById('reservation-form').reset();
+            document.getElementById('reservation-form').classList.remove('hidden');
+            document.getElementById('reservation-success').classList.add('hidden');
+        }
+
+        function prefillNote(editionTitle) {
+            showToast(`Selected: ${editionTitle} — Complete form below`);
+        }
+
+        // =========================================================================
+        // 5. TEAM-ONLY ADMIN PORTAL LOGIC
+        // =========================================================================
+        function openTeamPortal() {
+            const modal = document.getElementById('team-portal-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            if (isPortalUnlocked) {
+                showUnlockedDashboard();
+            } else {
+                document.getElementById('portal-lock-screen').classList.remove('hidden');
+                document.getElementById('portal-dashboard').classList.add('hidden');
+                document.getElementById('portal-pin-input').value = '';
+                document.getElementById('pin-error-msg').classList.add('hidden');
+            }
+        }
+
+        function closeTeamPortal() {
+            const modal = document.getElementById('team-portal-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('portal-pin-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const entered = document.getElementById('portal-pin-input').value.trim();
+            if (entered === teamPin) {
+                isPortalUnlocked = true;
+                showUnlockedDashboard();
+                showToast('Team Portal Unlocked');
+            } else {
+                document.getElementById('pin-error-msg').classList.remove('hidden');
+            }
+        });
+
+        function lockPortal() {
+            isPortalUnlocked = false;
+            document.getElementById('portal-lock-screen').classList.remove('hidden');
+            document.getElementById('portal-dashboard').classList.add('hidden');
+            showToast('Team Portal Locked');
+        }
+
+        function showUnlockedDashboard() {
+            document.getElementById('portal-lock-screen').classList.add('hidden');
+            document.getElementById('portal-dashboard').classList.remove('hidden');
+            renderAdminCatalogList();
+            renderAdminTeamList();
+            renderAdminReservationsList();
+        }
+
+        function switchPortalTab(tabName) {
+            ['catalog', 'team', 'reservations', 'security'].forEach(t => {
+                document.getElementById(`portal-tab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`tab-btn-${t}`);
+                btn.className = 'portal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10';
+            });
+
+            document.getElementById(`portal-tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            activeBtn.className = 'portal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-cyanNeon/20 text-cyanNeon border border-cyanNeon/40';
+        }
+
+        // Add Catalog Card/Service
+        document.getElementById('add-catalog-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const title = document.getElementById('cat-title').value.trim();
+            const price = document.getElementById('cat-price').value.trim();
+            const tag = document.getElementById('cat-tag').value.trim() || 'Phase 1';
+            const desc = document.getElementById('cat-desc').value.trim();
+
+            if (!title || !price || !desc) return;
+
+            catalogItems.push({
+                id: Date.now(),
+                title,
+                price,
+                tag,
+                desc
+            });
+
+            saveData(STORAGE_KEYS.CATALOG, catalogItems);
+            renderCatalog();
+            renderAdminCatalogList();
+            this.reset();
+            showToast('Card / Service published live!');
+        });
+
+        function deleteCatalogItem(id) {
+            catalogItems = catalogItems.filter(item => item.id !== id);
+            saveData(STORAGE_KEYS.CATALOG, catalogItems);
+            renderCatalog();
+            renderAdminCatalogList();
+            showToast('Item removed');
+        }
+
+        function renderAdminCatalogList() {
+            const list = document.getElementById('admin-catalog-list');
+            if (catalogItems.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-500 italic">No items published yet. The public page currently displays the themed "Coming Soon" banner.</p>`;
+                return;
+            }
+            list.innerHTML = catalogItems.map(item => `
+                <div class="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-obsidian border border-white/10">
+                    <div>
+                        <div class="text-sm font-bold text-white">${escapeHTML(item.title)} <span class="text-cyanNeon text-xs ml-2">${escapeHTML(item.price)}</span></div>
+                        <p class="text-xs text-slate-400 line-clamp-1">${escapeHTML(item.desc)}</p>
+                    </div>
+                    <button onclick="deleteCatalogItem(${item.id})" class="px-3 py-1.5 rounded-lg bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 text-xs font-semibold shrink-0">
+                        Remove
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Render & Save Editable Team Members
+        function renderAdminTeamList() {
+            const container = document.getElementById('admin-team-list');
+            container.innerHTML = teamMembers.map((m, idx) => `
+                <div class="p-3 rounded-2xl bg-obsidian border border-white/10 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-cyanNeon uppercase">${String(idx + 1).padStart(2, '0')} / 11</span>
+                        <label class="text-[10px] text-purpleNeon hover:underline cursor-pointer font-semibold">
+                            Upload Photo
+                            <input type="file" accept="image/*" class="hidden" onchange="handleTeamPhotoUpload(event, ${idx})">
+                        </label>
+                    </div>
+                    <input type="text" data-team-name="${idx}" value="${escapeHTML(m.name)}" placeholder="Member Name"
+                        class="w-full px-3 py-1.5 rounded-lg bg-midnight border border-white/10 text-xs text-white focus:border-cyanNeon focus:outline-none">
+                    <input type="text" data-team-role="${idx}" value="${escapeHTML(m.role)}" placeholder="Role / Title"
+                        class="w-full px-3 py-1.5 rounded-lg bg-midnight border border-white/10 text-xs text-slate-300 focus:border-purpleNeon focus:outline-none">
+                    <input type="text" data-team-photo="${idx}" value="${escapeHTML(m.photo || '')}" placeholder="Image URL or filename"
+                        class="w-full px-3 py-1.5 rounded-lg bg-midnight border border-white/10 text-[11px] text-slate-400 focus:border-cyanNeon focus:outline-none">
+                </div>
+            `).join('');
+        }
+
+        function handleTeamPhotoUpload(event, idx) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                teamMembers[idx].photo = e.target.result;
+                teamMembers[idx].objectPos = 'object-center';
+                const photoInput = document.querySelector(`[data-team-photo="${idx}"]`);
+                if (photoInput) photoInput.value = e.target.result;
+                saveData(STORAGE_KEYS.TEAM, teamMembers);
+                renderTeam();
+                showToast(`Updated photo for ${teamMembers[idx].name}`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveTeamMembers() {
+            const nameInputs = document.querySelectorAll('[data-team-name]');
+            const roleInputs = document.querySelectorAll('[data-team-role]');
+            const photoInputs = document.querySelectorAll('[data-team-photo]');
+
+            nameInputs.forEach((input, idx) => {
+                const newName = input.value.trim();
+                if (newName) teamMembers[idx].name = newName;
+            });
+            roleInputs.forEach((input, idx) => {
+                const newRole = input.value.trim();
+                if (newRole) teamMembers[idx].role = newRole;
+            });
+            photoInputs.forEach((input, idx) => {
+                teamMembers[idx].photo = input.value.trim();
+            });
+
+            saveData(STORAGE_KEYS.TEAM, teamMembers);
+            renderTeam();
+            showToast('Team profiles updated!');
+        }
+
+        function resetTeamDefaults() {
+            teamMembers = JSON.parse(JSON.stringify(DEFAULT_TEAM));
+            saveData(STORAGE_KEYS.TEAM, teamMembers);
+            renderTeam();
+            renderAdminTeamList();
+            showToast('Official 11-member roster restored!');
+        }
+
+        // Render Reservations in Admin Portal
+        function renderAdminReservationsList() {
+            document.getElementById('res-count-badge').textContent = reservations.length;
+            const list = document.getElementById('admin-reservations-list');
+
+            if (reservations.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-500 italic">No Early Access reservations submitted yet.</p>`;
+                return;
+            }
+
+            list.innerHTML = reservations.map(r => `
+                <div class="p-3.5 rounded-2xl bg-obsidian border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono font-bold text-cyanNeon">${escapeHTML(r.passCode)}</span>
+                            <span class="text-sm font-bold text-white">${escapeHTML(r.name)}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 mt-0.5">${escapeHTML(r.contact)} • <span class="text-purpleNeon font-medium">${escapeHTML(r.instagram)}</span></p>
+                    </div>
+                    <span class="text-[11px] text-slate-500">${escapeHTML(r.timestamp)}</span>
+                </div>
+            `).join('');
+        }
+
+        function exportReservationsCSV() {
+            if (reservations.length === 0) {
+                showToast('No reservations to export yet.');
+                return;
+            }
+            const headers = ['PassCode', 'Name', 'Contact', 'Instagram', 'Timestamp'];
+            const rows = reservations.map(r => [r.passCode, r.name, r.contact, r.instagram, r.timestamp]
+                .map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'omnicard-phase1-reservations.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Reservations CSV downloaded!');
+        }
+
+        function updateTeamPin() {
+            const newPin = document.getElementById('new-pin-input').value.trim();
+            if (newPin.length < 4) {
+                showToast('PIN must be at least 4 characters.');
+                return;
+            }
+            teamPin = newPin;
+            saveData(STORAGE_KEYS.PIN, teamPin);
+            document.getElementById('new-pin-input').value = '';
+            showToast('Team Access PIN updated!');
+        }
+
+        // =========================================================================
+        // 6. HELPERS & MOBILE NAVIGATION
+        // =========================================================================
+        function escapeHTML(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function getInitials(name, fallbackNum) {
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[1][0]).toUpperCase();
+            }
+            if (parts[0] && parts[0].length >= 2) {
+                return parts[0].slice(0, 2).toUpperCase();
+            }
+            return `M${fallbackNum}`;
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('toast-banner');
+            toast.textContent = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3200);
+        }
+
+        // Mobile Drawer Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // Initial Render on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCatalog();
+            renderTeam();
+            updateSpotsCounter();
+            document.getElementById('res-count-badge').textContent = reservations.length;
+        });
+    </script>
+</body>
+</html>
